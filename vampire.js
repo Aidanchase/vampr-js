@@ -21,39 +21,48 @@ class Vampire {
 
   // Returns the number of vampires away from the original vampire this vampire is
   get numberOfVampiresFromOriginal() {
-      let numOfVamps = 0;
-      let currentVamp = this;
-      
-      while (currentVamp.creator){
-        currentVamp = currentVamp.creator
-        numOfVamps++
-      }
-      return numOfVamps;
+    let numOfVamps = 0;
+    let currentVamp = this;
+
+    while (currentVamp.creator) {
+      currentVamp = currentVamp.creator
+      numOfVamps++
+    }
+    return numOfVamps;
   }
 
   // Returns true if this vampire is more senior than the other vampire. (Who is closer to the original vampire)
   isMoreSeniorThan(vampire) {
-      return this.numberOfVampiresFromOriginal < vampire.numberOfVampiresFromOriginal;
+    return this.numberOfVampiresFromOriginal < vampire.numberOfVampiresFromOriginal;
   }
 
   /** Tree traversal methods **/
 
   // Returns the vampire object with that name, or null if no vampire exists with that name
   vampireWithName(name) {
-    
+    if (this.name === name){
+      return this;
+    } 
+    for (let children of this.offspring){
+      if (children.vampireWithName(name)){
+        return children.vampireWithName(name)
+      }
+    }
+    return null;
   }
 
   // Returns the total number of vampires that exist
   get totalDescendents() {
-    
+    let counter = 0;
+    for (let child of this.offspring) {
+      counter += child.totalDescendents + 1;
+    }
+    return counter
   }
 
   // Returns an array of all the vampires that were converted after 1980
-  get allMillennialVampires() {
-    
-  }
 
->>>>>>> origin/traversal
+
   /** Stretch **/
 
   // Returns the closest common ancestor of two vampires.
@@ -83,9 +92,20 @@ class Vampire {
 
     return pire;
   }
+  get allMillennialVampires() {
+    let vamps = [];
+    if (this.yearConverted > 1980) {
+      vamps.push(this);
+    }
+
+    for (let children of this.offspring) {
+      vamps = vamps.concat(children.allMillennialVampires);
+    }
+    
+    return vamps;
+  }
+
 }
 
 
-
 module.exports = Vampire;
-
