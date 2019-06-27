@@ -36,6 +36,19 @@ class Vampire {
       return this.numberOfVampiresFromOriginal < vampire.numberOfVampiresFromOriginal;
   }
 
+
+
+  get vampirians() {
+    let ancestors = [];
+    let pire = this;
+
+    while (pire) {
+      ancestors.push(pire);
+      pire = pire.creator;
+    }
+
+    return ancestors;
+  }
   /** Stretch **/
 
   // Returns the closest common ancestor of two vampires.
@@ -44,18 +57,14 @@ class Vampire {
   // * when comparing Ansel and Sarah, Ansel is the closest common anscestor.
   // * when comparing Ansel and Andrew, Ansel is the closest common anscestor.
   closestCommonAncestor(vampire) {
-    let currentVamp = this;
+    const myBlood = this.vampirians;
+    let pire = vampire;
 
-    while (currentVamp.creator)
-    if (currentVamp.creator === vampire) {
-      return vampire.name;
-      break;
-    } else if (currentVamp.creator.offspring.includes(vampire)) {
-      return currentVamp.creator.name;
-      break;
-    } else {
-      currentVamp = currentVamp.creator;
+    while (!myBlood.includes(pire)) {
+      pire = pire.creator;
     }
+
+    return pire;
   }
 }
 
